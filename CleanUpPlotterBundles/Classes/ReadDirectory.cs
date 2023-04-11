@@ -36,7 +36,7 @@ namespace CleanUpPlotterBundles.Classes
                 string[] directories = Directory.GetDirectories(path);
                 for (int i = 0; i < directories.Length; i++)
                 {
-                    SetListOfFilesToCopy(Directory.GetFileSystemEntries(path)[i]);
+                    SetListOfFilesToCopy(directories[i]);
                 }
             }
             else

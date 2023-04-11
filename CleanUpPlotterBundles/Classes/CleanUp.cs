@@ -2,6 +2,7 @@
 using CleanUpPlotterBundles.Models;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CleanUpPlotterBundles.Classes
 {
@@ -13,6 +14,7 @@ namespace CleanUpPlotterBundles.Classes
         private Fileextensions _fileextensions;
         private List<string> _paths;
         private List<FileInfo> _filesToCopy;
+        private List<string> _directoriesToDelete;
         #endregion
 
         #region Properties
@@ -32,10 +34,47 @@ namespace CleanUpPlotterBundles.Classes
         private void CleanUpBundle(string mainpath)
         {
             _paths = _readDirectory.GetDirectories(mainpath);
+
             foreach (string path in _paths)
             {
+                _directoriesToDelete = _readDirectory.GetDirectories(path);
                 _filesToCopy = _readDirectory.GetFilesToCopy(path);
+
+                for (int i = 0; i < _fileextensions.fileextension.Length; i++)
+                {
+                    string extension = _fileextensions.fileextension[i];
+                    string trimExtension = extension.Trim('.');
+
+                    string sourcePath = path;
+                    string destPath = Path.Combine(path, trimExtension.ToUpper());
+
+                    Directory.CreateDirectory(destPath);
+                    List<FileInfo> onlyOneType = _filesToCopy.Where(x => x.FullName.EndsWith(extension))
+                                                             .Select(x => x).ToList();
+
+                    foreach (var file in onlyOneType)
+                    {
+                        FileInfo destFile = new FileInfo(Path.Combine(destPath, file.Name));
+                        if (destFile.Exists)
+                        {
+                            if (file.Length > destFile.Length)
+                            {
+                                file.CopyTo(destFile.FullName, true);
+                            }
+                        }
+                        else
+                        {
+                            file.CopyTo(destFile.FullName);
+                        }
+                    }
+                }
+                foreach (var directory in _directoriesToDelete)
+                {
+                    Directory.Delete(directory);
+                }
             }
+
+            
         }
         #endregion
     }
