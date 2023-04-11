@@ -11,11 +11,11 @@ namespace CleanUpPlotterBundles.Classes
     public class ReadDirectory : IReadDirectory
     {
         #region Fields
-        private List<string> filepathsToCopy = new List<string>();
+        private string[] filepathsToCopy = new string[] { };
         #endregion
 
         #region Methods
-        public List<string> GetFilepathsToCopy(string path)
+        public string[] GetFilepathsToCopy(string path)
         {
             SetListOfFilepathsToCopy(path);
             return filepathsToCopy;

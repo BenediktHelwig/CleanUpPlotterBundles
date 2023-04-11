@@ -9,7 +9,7 @@ namespace CleanUpPlotterBundles.Interfaces
     public interface IReadDirectory
     {
         #region Methods
-        List<string> GetFilepathsToCopy(string path);
+        string[] GetFilepathsToCopy(string path);
         #endregion
     }
 }
