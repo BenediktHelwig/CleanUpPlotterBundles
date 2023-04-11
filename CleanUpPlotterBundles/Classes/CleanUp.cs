@@ -70,7 +70,7 @@ namespace CleanUpPlotterBundles.Classes
                 }
                 foreach (var directory in _directoriesToDelete)
                 {
-                    Directory.Delete(directory);
+                    Directory.Delete(directory, true);
                 }
             }
 
