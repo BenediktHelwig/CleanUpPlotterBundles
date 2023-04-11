@@ -25,17 +25,6 @@ namespace CleanUpPlotterBundles.Classes
             return Directory.GetDirectories(path).ToList();
         }
 
-        public List<FileInfo> GetFiles(string path)
-        {
-            List<FileInfo> fileInfos = new List<FileInfo>();
-            string[] files = Directory.GetFiles(path);
-            for (int i = 0; i < files.Length; i++)
-            {
-                FileInfo file = new FileInfo(files[i]);
-                fileInfos.Add(file);
-            }
-            return fileInfos;
-        }
         #endregion
 
         #region Class_Methods
