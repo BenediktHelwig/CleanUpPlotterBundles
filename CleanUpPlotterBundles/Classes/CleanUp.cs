@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CleanUpPlotterBundles.Interfaces;
+﻿using CleanUpPlotterBundles.Interfaces;
 using CleanUpPlotterBundles.Models;
+using System.Collections.Generic;
+using System.IO;
 
 namespace CleanUpPlotterBundles.Classes
 {
@@ -13,24 +10,12 @@ namespace CleanUpPlotterBundles.Classes
         #region Fields
         private IReadConfig _readConfig;
         private IReadDirectory _readDirectory;
+        private Fileextensions _fileextensions;
+        private List<string> _paths;
+        private List<FileInfo> _filesToCopy;
         #endregion
 
         #region Properties
-        private Fileextensions fileextensions;
-
-        public Fileextensions Fileextensions
-        {
-            get { return fileextensions; }
-            set { fileextensions = value; }
-        }
-
-        private List<string> paths;
-
-        public List<string> Paths
-        {
-            get { return paths; }
-            set { paths = value; }
-        }
         #endregion
 
         #region Constructor
@@ -39,12 +24,19 @@ namespace CleanUpPlotterBundles.Classes
             _readConfig = readConfig;
             _readDirectory = readDirectory;
 
-            Fileextensions = _readConfig.ReadConfigFile();
-            Paths = _readDirectory.GetFilepathsToCopy(mainpath);
+            _fileextensions = _readConfig.ReadConfigFile();
+            CleanUpBundle(mainpath);
         }
         #endregion
         #region Methods
-
+        private void CleanUpBundle(string mainpath)
+        {
+            _paths = _readDirectory.GetDirectories(mainpath);
+            foreach (string path in _paths)
+            {
+                _filesToCopy = _readDirectory.GetFilesToCopy(path);
+            }
+        }
         #endregion
     }
 }

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace CleanUpPlotterBundles.Interfaces
 {
     public interface IReadDirectory
     {
         #region Methods
-        string[] GetFilepathsToCopy(string path);
+        List<FileInfo> GetFilesToCopy(string path);
+        List<string> GetDirectories(string path);
+        List<FileInfo> GetFiles(string path);
         #endregion
     }
 }

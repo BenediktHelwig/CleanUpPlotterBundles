@@ -1,6 +1,5 @@
-﻿using System;
-using CleanUpPlotterBundles.Interfaces;
-using CleanUpPlotterBundles.Classes;
+﻿using CleanUpPlotterBundles.Classes;
+using System;
 
 namespace CleanUpPlotterBundles
 {

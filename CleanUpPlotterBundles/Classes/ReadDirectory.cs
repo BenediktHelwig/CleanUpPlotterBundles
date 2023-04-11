@@ -1,44 +1,66 @@
 ﻿using CleanUpPlotterBundles.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CleanUpPlotterBundles.Classes
 {
     public class ReadDirectory : IReadDirectory
     {
         #region Fields
-        private string[] filepathsToCopy = new string[] { };
+        private List<FileInfo> filepathsToCopy = new List<FileInfo>();
         #endregion
 
         #region Methods
-        public string[] GetFilepathsToCopy(string path)
+
+        #region Interface_Methods
+        public List<FileInfo> GetFilesToCopy(string path)
         {
-            SetListOfFilepathsToCopy(path);
+            SetListOfFilesToCopy(path);
             return filepathsToCopy;
         }
 
-        public void SetListOfFilepathsToCopy(string path)
+        public List<string> GetDirectories(string path)
+        {
+            return Directory.GetDirectories(path).ToList();
+        }
+
+        public List<FileInfo> GetFiles(string path)
+        {
+            List<FileInfo> fileInfos = new List<FileInfo>();
+            string[] files = Directory.GetFiles(path);
+            for (int i = 0; i < files.Length; i++)
+            {
+                FileInfo file = new FileInfo(files[i]);
+                fileInfos.Add(file);
+            }
+            return fileInfos;
+        }
+        #endregion
+
+        #region Class_Methods
+        public void SetListOfFilesToCopy(string path)
         {
             string[] filepaths = Directory.GetFiles(path);
             if (filepaths.Length == 0)
             {
-                for (int i = 0; i < Directory.GetFileSystemEntries(path).Length; i++)
+                string[] directories = Directory.GetDirectories(path);
+                for (int i = 0; i < directories.Length; i++)
                 {
-                    SetListOfFilepathsToCopy(Directory.GetFileSystemEntries(path)[i]);
+                    SetListOfFilesToCopy(Directory.GetFileSystemEntries(path)[i]);
                 }
             }
             else
             {
                 for (int i = 0; i < filepaths.Length; i++)
                 {
-                    filepathsToCopy.Append(filepaths[i]);
+                    FileInfo file = new FileInfo(filepaths[i]);
+                    filepathsToCopy.Add(file);
                 }
             }
         }
+        #endregion
+
         #endregion
     }
 }
