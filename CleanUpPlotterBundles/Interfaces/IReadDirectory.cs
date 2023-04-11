@@ -8,7 +8,6 @@ namespace CleanUpPlotterBundles.Interfaces
         #region Methods
         List<FileInfo> GetFilesToCopy(string path);
         List<string> GetDirectories(string path);
-        List<FileInfo> GetFiles(string path);
         #endregion
     }
 }
