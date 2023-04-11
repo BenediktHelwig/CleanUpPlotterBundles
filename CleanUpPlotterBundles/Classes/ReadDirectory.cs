@@ -35,7 +35,7 @@ namespace CleanUpPlotterBundles.Classes
             {
                 for (int i = 0; i < filepaths.Length; i++)
                 {
-                    filepathsToCopy.Add(filepaths[i]);
+                    filepathsToCopy.Append(filepaths[i]);
                 }
             }
         }
