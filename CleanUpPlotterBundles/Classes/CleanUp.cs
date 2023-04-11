@@ -14,7 +14,7 @@ namespace CleanUpPlotterBundles.Classes
         private Fileextensions _fileextensions;
         private List<string> _paths;
         private List<FileInfo> _filesToCopy;
-        private List<string> _directoriesToDelete;
+        private List<string> _directoriesToDelete = new List<string>();
         #endregion
 
         #region Properties
@@ -37,44 +37,70 @@ namespace CleanUpPlotterBundles.Classes
 
             foreach (string path in _paths)
             {
-                _directoriesToDelete = _readDirectory.GetDirectories(path);
+                SetDirectoriesToDelete(_readDirectory.GetDirectories(path));
                 _filesToCopy = _readDirectory.GetFilesToCopy(path);
 
-                for (int i = 0; i < _fileextensions.fileextension.Length; i++)
+                CopyFiles(path);
+            }
+            foreach (var directory in _directoriesToDelete)
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        private void SetDirectoriesToDelete(List<string> directoryDeleteList)
+        {
+            foreach (string directory in directoryDeleteList)
+            {
+                _directoriesToDelete.Add(directory);
+            }
+        }
+
+        private void RemoveFromDirectoriesToDelete(string path)
+        {
+            _directoriesToDelete.Remove(path);
+        }
+
+        private void CopyFiles(string path)
+        {
+            for (int i = 0; i < _fileextensions.fileextension.Length; i++)
+            {
+                string extension = _fileextensions.fileextension[i];
+                string trimExtension = extension.Trim('.').ToUpper();
+
+                string sourcePath = path;
+                string destPath = Path.Combine(path, trimExtension);
+
+                RemoveFromDirectoriesToDelete(destPath);
+
+                Directory.CreateDirectory(destPath);
+                List<FileInfo> onlyOneType = _filesToCopy.Where(x => x.FullName.EndsWith(extension))
+                                                         .Select(x => x).ToList();
+
+                foreach (var file in onlyOneType)
                 {
-                    string extension = _fileextensions.fileextension[i];
-                    string trimExtension = extension.Trim('.');
-
-                    string sourcePath = path;
-                    string destPath = Path.Combine(path, trimExtension.ToUpper());
-
-                    Directory.CreateDirectory(destPath);
-                    List<FileInfo> onlyOneType = _filesToCopy.Where(x => x.FullName.EndsWith(extension))
-                                                             .Select(x => x).ToList();
-
-                    foreach (var file in onlyOneType)
+                    FileInfo destFile = new FileInfo(Path.Combine(destPath, file.Name));
+                    if (destFile.Exists)
                     {
-                        FileInfo destFile = new FileInfo(Path.Combine(destPath, file.Name));
-                        if (destFile.Exists)
+                        if (file.Length > destFile.Length)
                         {
-                            if (file.Length > destFile.Length)
-                            {
-                                file.CopyTo(destFile.FullName, true);
-                            }
-                        }
-                        else
-                        {
-                            file.CopyTo(destFile.FullName);
+                            file.CopyTo(destFile.FullName, true);
                         }
                     }
-                }
-                foreach (var directory in _directoriesToDelete)
-                {
-                    Directory.Delete(directory, true);
+                    else
+                    {
+                        file.CopyTo(destFile.FullName);
+                    }
+                    if (file.Exists)
+                    {
+                        if (file.FullName != destFile.FullName)
+                        {
+                            file.Delete();
+                        }
+                        _filesToCopy.Remove(file);
+                    }
                 }
             }
-
-            
         }
         #endregion
     }
