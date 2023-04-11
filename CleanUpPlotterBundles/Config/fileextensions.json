@@ -1,6 +1,10 @@
 {
   "fileextension": [
-    ".svg",
-    ".png"
+    ".ai",
+    ".dxf",
+    ".eps",
+    ".pdf",
+    ".png",
+    ".svg"
   ]
 }
