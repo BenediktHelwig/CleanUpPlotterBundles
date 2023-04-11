@@ -8,7 +8,7 @@ using CleanUpPlotterBundles.Models;
 
 namespace CleanUpPlotterBundles.Classes
 {
-    public class Filter
+    public class CleanUp
     {
         #region Fields
         private IReadConfig _readConfig;
@@ -34,7 +34,7 @@ namespace CleanUpPlotterBundles.Classes
         #endregion
 
         #region Constructor
-        public Filter(IReadConfig readConfig, IReadDirectory readDirectory, string mainpath)
+        public CleanUp(IReadConfig readConfig, IReadDirectory readDirectory, string mainpath)
         {
             _readConfig = readConfig;
             _readDirectory = readDirectory;
@@ -42,6 +42,9 @@ namespace CleanUpPlotterBundles.Classes
             Fileextensions = _readConfig.ReadConfigFile();
             Paths = _readDirectory.GetFilepathsToCopy(mainpath);
         }
+        #endregion
+        #region Methods
+
         #endregion
     }
 }

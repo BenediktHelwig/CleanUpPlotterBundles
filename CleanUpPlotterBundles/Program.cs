@@ -10,7 +10,7 @@ namespace CleanUpPlotterBundles
         {
             Console.WriteLine("Hauptverzeichnis der Unterverzeichnise eingeben: ");
             string mainpath = Console.ReadLine();
-            Filter filter = new Filter(new ReadConfig(), new ReadDirectory(), mainpath);
+            CleanUp cleanUp = new CleanUp(new ReadConfig(), new ReadDirectory(), mainpath);
 
         }
     }
