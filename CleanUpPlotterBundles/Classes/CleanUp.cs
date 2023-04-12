@@ -1,6 +1,7 @@
 ﻿using CleanUpPlotterBundles.Interfaces;
 using CleanUpPlotterBundles.Models;
 using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -44,7 +45,32 @@ namespace CleanUpPlotterBundles.Classes
             }
             foreach (var directory in _directoriesToDelete)
             {
-                Directory.Delete(directory, true);
+                try
+                {
+                    DirectoryInfo deleteDirectory = new DirectoryInfo(directory);
+                    if (deleteDirectory.Exists)
+                    {
+                        SetAttributesNormal(deleteDirectory);
+                        deleteDirectory.Delete(true);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
+
+        private void SetAttributesNormal(DirectoryInfo deleteDirectory)
+        {
+            foreach (var subDir in deleteDirectory.GetDirectories())
+            {
+                SetAttributesNormal(subDir);
+                subDir.Attributes = FileAttributes.Normal;
+            }
+            foreach (var file in deleteDirectory.GetFiles())
+            {
+                file.Attributes = FileAttributes.Normal;
             }
         }
 
